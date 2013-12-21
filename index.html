@@ -1,0 +1,226 @@
+﻿<!DOCTYPE html>
+<html class="scrollbar">
+<head>
+    <title>multi filter using isotope</title>
+    <link href="dropdownfilter/dropdownfilter.css" rel="stylesheet" type="text/css" />
+       <style>
+
+#container
+{
+    margin-top:20px;
+}
+.clear
+{
+    clear:both;
+}
+.item {
+  width: 80px;
+  height: 80px;
+  padding: 5px;
+  margin: 5px;
+  color: white;
+  float: left;
+}
+
+p {
+  margin: 0;
+}
+
+
+
+.red { background: red; }
+.blue { background: blue; }
+.green { background: green; }
+.yellow { background: yellow; color: black; }
+/* Start: Recommended Isotope styles */
+
+/**** Isotope Filtering ****/
+
+.isotope-item {
+  z-index: 2;
+}
+
+.isotope-hidden.isotope-item {
+  pointer-events: none;
+  z-index: 1;
+}
+
+/**** Isotope CSS3 transitions ****/
+
+.isotope,
+.isotope .isotope-item {
+  -webkit-transition-duration: 0.8s;
+     -moz-transition-duration: 0.8s;
+       -o-transition-duration: 0.8s;
+          transition-duration: 0.8s;
+}
+
+.isotope {
+  -webkit-transition-property: height, width;
+     -moz-transition-property: height, width;
+       -o-transition-property: height, width;
+          transition-property: height, width;
+}
+
+.isotope .isotope-item {
+  -webkit-transition-property: -webkit-transform, opacity;
+     -moz-transition-property:    -moz-transform, opacity;
+       -o-transition-property:         top, left, opacity;
+          transition-property:         transform, opacity;
+}
+
+/**** disabling Isotope CSS3 transitions ****/
+
+.isotope.no-transition,
+.isotope.no-transition .isotope-item,
+.isotope .isotope-item.no-transition {
+  -webkit-transition-duration: 0s;
+     -moz-transition-duration: 0s;
+       -o-transition-duration: 0s;
+          transition-duration: 0s;
+}
+
+/* End: Recommended Isotope styles */
+    </style>
+</head>
+<body>
+   
+        <div class="main-content">            
+            <div class="group" id="Filters">
+                <div class="drop_down wf">
+                    <span class="anim150">Color</span>
+                    <ul class="anim250 ddlselector" data-filter-type="multi">
+                        <li class="active" data-filter="all" data-dimension="color" data-dimension-id="-1">
+                            All</li>
+                        <li data-filter=".red" data-dimension="color" data-dimension-id="1">red</li>
+                        <li data-filter=".blue" data-dimension="color" data-dimension-id="2">blue</li>
+                        <li data-filter=".green" data-dimension="color" data-dimension-id="3">green</li>
+                        <li data-filter=".yellow" data-dimension="color" data-dimension-id="4">yellow</li>
+                    </ul>
+                </div>
+                <div class="drop_down wf">
+                    <span class="anim150">Type</span>
+                    <ul class="anim250 ddlselector" data-filter-type="multi">
+                        <li class="active" data-filter="all" data-dimension="type" data-dimension-id="-1">
+                            All</li>
+                        <li data-filter=".type1" data-dimension="type" data-dimension-id="1">type1</li>
+                        <li data-filter=".type2" data-dimension="type" data-dimension-id="2">type2</li>
+                        <li data-filter=".type3" data-dimension="type" data-dimension-id="3">type3</li>
+                        <li data-filter=".type4" data-dimension="type" data-dimension-id="4">type4</li>
+                    </ul>
+                </div>
+                <div class="drop_down wf" data-filter-type="multi">
+                    <span class="anim150">Brand</span>
+                    <ul class="anim250 ddlselector" data-filter-type="multi">
+                        <li class="active" data-filter="all" data-dimension="brand" data-dimension-id="-1">
+                            All</li>
+                        <li data-filter=".brand1" data-dimension="brand" data-dimension-id="1">brand1</li>
+                        <li data-filter=".brand2" data-dimension="brand" data-dimension-id="2">brand2</li>
+                        <li data-filter=".brand3" data-dimension="brand" data-dimension-id="3">brand3</li>
+                        <li data-filter=".brand4" data-dimension="brand" data-dimension-id="4">brand4</li>
+                    </ul>
+                </div>
+            </div>  
+            <div class="clear"></div>       
+            <div id="container">
+            </div>
+        </div>
+   
+    <!-------------------------------- JS ------------------------------------------->
+    <script src="js/jquery.min.js" type="text/javascript"></script>
+    <script src="js/jquery.isotope.min.js" type="text/javascript"></script>
+    <script src="dropdownfilter/jquery.DropdownSelector.js" type="text/javascript"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#Filters').DropdownSelector();
+            $('#Filters li').on('click', function () {  
+                $container.isotope({ filter: getCombinations($('#Filters').DropdownSelector.GetDimensions()) });
+            });
+
+        });
+        function getCombinations(filters) {
+            var i = 0;
+            var comboFilters = [];
+
+            for (var prop in filters) {
+                var filterGroup = filters[prop].split(',');
+                if (!filterGroup.length) {
+                    continue;
+                }
+                if (i === 0) {
+                    comboFilters = filterGroup.slice(0);
+                }
+                else {
+                    var filterSelectors = [];
+                    var groupCombo = comboFilters.slice(0);
+                    for (var k = 0, len3 = filterGroup.length; k < len3; k++) {
+                        for (var j = 0, len2 = groupCombo.length; j < len2; j++) {
+                            filterSelectors.push(groupCombo[j] + filterGroup[k]); // [ 1, 2 ]
+                        }
+                    }
+                    comboFilters = filterSelectors;
+                }
+                i++;
+            }
+           
+            var comboFilter = comboFilters.join(', ');
+            return comboFilter;
+        }
+    </script>
+      <script type="text/javascript">
+
+          /*jshint browser:true, undef: true, unused: true, jquery: true */
+
+          var $container;
+          var filters = {};
+
+          $(function () {
+
+              $container = $('#container');
+
+              createContent();
+
+              $container.isotope();            
+
+          });
+
+
+          var data = {
+              brands: 'brand1 brand2 brand3 brand4'.split(' '),
+              productTypes: 'type1 type2 type3 type4'.split(' '),
+              colors: 'red blue yellow green'.split(' '),
+              sizes: 'uk-size8 uk-size9 uk-size10 uk-size11'.split(' ')
+          };
+
+          function createContent() {
+              var brand, productType, color, size;
+              var items = '';
+              // dynamically create content
+              for (var i = 0, len1 = data.brands.length; i < len1; i++) {
+                  brand = data.brands[i];
+                  for (var j = 0, len2 = data.productTypes.length; j < len2; j++) {
+                      productType = data.productTypes[j];
+                      for (var l = 0, len3 = data.colors.length; l < len3; l++) {
+                          color = data.colors[l];
+                          for (var k = 0, len4 = data.sizes.length; k < len4; k++) {
+                              size = data.sizes[k];
+                              var itemHtml = '<div class="item ' + brand + ' ' +
+            productType + ' ' + color + ' ' + size + '">' +
+            '<p>' + brand + '</p>' +
+            '<p>' + productType + '</p>' +
+            '<p>' + size + '</p>' +
+            '</div>';
+                              items += itemHtml;
+                          }
+                      }
+                  }
+              }
+
+              $container.append(items);
+          }
+
+        
+    </script>
+</body>
+</html>
